@@ -1,0 +1,195 @@
+Step 1: Send the Pre-requisite
+Step 2: Pre-requisite Received 
+Check the URL accessible
+Document Related to APIs
+Also, look for JSON file present or mentioned in Pre-requisite
+Try to import the JSON File in Postman
+Step 3: Once the request is working fine getting 200 ok
+Step 4: Move the Postman Request to Burp.
+		Go to file > Setting > Proxy > Add custom proxy configuration
+Step 5: The Request will get move to Burp. 
+Now, we can intercept the call and then perform our further Testing
+
+Test Case:
+https://github.com/shieldfy/API-Security-Checklist
+
+Xavi mendez
+xmendez/wfuzz
+
+wfuzz ls
+brute fuzzer
+wfuzz-cli.py --help
+./wfuzz-cli.py -c -w wordlist/general/common.txt -hc 404 http://testphp.vulnweb.com/FUZZ.php
+
+-c = color coding
+-w = wordlist/general/common
+-hc = hide 404 response
+
+
+wFuzz
+
+API Security:-
+
+A1 : Broken Object Level Authorization
+A2 : Broken Authentication
+A3 : Excessive Data Exposure
+A4 : Lack of Resources & Rate Limiting
+A5 : Missing Function Level Authorization
+A6 : Mass Assignment
+A7 : Security Misconfiguration
+A8 : Injection
+A9 : Improper Assets Management
+A10 : Insufficient Logging & Monitoring
+
+A1 : Broken Object Level Authorization
+Use case
+API call parameters use the ID of the resource accessed through the API /api/shop1/financial_info.
+Attackers replace the IDs of their resources with a different one which they guessed through /api/shop2/financial_info.
+The API does not check permissions and lets the call through.
+Problem is aggravated if IDs can be enumerated /api/123/financial_info.
+
+How to prevent
+Implement authorization checks with user policies and hierarchy.
+Do not rely on IDs that the client sends. Use IDs stored in the session object instead.
+Check authorization for each client request to access database.
+Use random IDs that cannot be guessed (UUIDs).
+
+A2 : Broken Authentication
+
+Use case
+Unprotected APIs that are considered “internal”
+Weak authentication that does not follow industry best practices
+Weak API keys that are not rotated
+Passwords that are weak, plain text, encrypted, poorly hashed, shared, or default passwords
+Authentication susceptible to brute force attacks and credential stuffing
+Credentials and keys included in URLs
+Lack of access token validation (including JWT validation)
+Unsigned or weakly signed non-expiring JWTs
+
+How to prevent
+Check all possible ways to authenticate to all APIs.
+APIs for password reset and one-time links also allow users to authenticate, and should be protected just as rigorously.
+Use standard authentication, token generation, password storage, and multi-factor authentication (MFA).
+Use short-lived access tokens.
+Authenticate your apps (so you know who is talking to you).
+Use stricter rate-limiting for authentication, and implement lockout policies and weak password checks.
+
+A3 : Excessive Data Exposure
+Use case
+The API returns full data objects as they are stored in the backend database.
+The client application filters the responses and only shows the data that the users really need to see.
+Attackers call the API directly and get also the sensitive data that the UI would filter out.
+
+How to prevent
+Never rely on the client to filter data!
+Review all API responses and adapt them to match what the API consumers really need.
+Carefully define schemas for all the API responses.
+Do not forget about error responses, define proper schemas as well.
+Identify all the sensitive data or Personally Identifiable Information (PII), and justify its use.
+Enforce response checks to prevent accidental leaks of data or exceptions.
+
+A4 : Lack of Resources & Rate Limiting
+Use case
+Attackers overload the API by sending more requests than it can handle.
+Attackers send requests at a rate exceeding the API's processing speed, clogging it up.
+The size of the requests or some fields in them exceed what the API can process.
+“Zip bombs”, archive files that have been designed so that unpacking them takes excessive amount of resources and overloads the API.
+How to prevent
+Define proper rate limiting.
+Limit payload sizes.
+Tailor the rate limiting to be match what API methods, clients, or addresses need or should be allowed to get.
+Add checks on compression ratios.
+Define limits for container resources.
+
+A5 : Missing Function Level Authorization
+Use case
+Some administrative functions are exposed as APIs.
+Non-privileged users can access these functions without authorization if they know how.
+Can be a matter of knowing the URL, or using a different verb or a parameter:
+/api/users/v1/user/myinfo
+/api/admins/v1/users/all
+How to prevent
+Do not rely on the client to enforce admin access.
+Deny all access by default.
+Only allow operations to users belonging to the appropriate group or role.
+Properly design and test authorization.
+
+A6 : Mass Assignment
+
+Use case
+The API works with the data structures without proper filtering.
+Received payload is blindly transformed into an object and stored.
+NodeJS:
+var user = new User(req.body);
+user.save();
+Rails:
+@user = User.new(params[:user])
+Attackers can guess the fields by looking at the GET request data.
+
+How to prevent
+Do not automatically bind incoming data and internal objects.
+Explicitly define all the parameters and payloads you are expecting.
+Use the readOnly property set to true in object schemas for all properties that can be retrieved through APIs but should never be modified.
+Precisely define the schemas, types, and patterns you will accept in requests at design time and enforce them at runtime.
+
+A7 : Security Misconfiguration
+Use case
+Unpatched systems
+Unprotected files and directories
+Unhardened images
+Missing, outdated, or misconfigured TLS
+Exposed storage or server management panels
+Missing CORS policy or security headers
+Error messages with stack traces
+Unnecessary features enabled
+
+How to prevent
+Establish repeatable hardening and patching processes.
+Automate locating configuration flaws.
+Disable unnecessary features.
+Restrict administrative access.
+Define and enforce all outputs, including errors.	
+
+A8 : Injection
+Use cases
+Attackers send malicious input to be forwarded to an internal interpreter:
+SQL
+NoSQL
+LDAP
+OS commands
+XML parsers
+Object-Relational Mapping (ORM)
+How to prevent
+Never trust your API consumers, even if they are internal.
+Strictly define all input data, such as schemas, types, and string patterns, and enforce them at runtime.
+Validate, filter, and sanitize all incoming data.
+Define, limit, and enforce API outputs to prevent data leaks.
+
+A9 : Improper Assets Management
+Use case
+DevOps, the cloud, containers, and Kubernetes make having multiple deployments easy (for example, dev, test, branches, staging, old versions).
+Desire to maintain backward compatibility forces to leave old APIs running.
+Old or non-production versions are not properly maintained, but these endpoints still have access to production data.
+Once authenticated with one endpoint, attackers may switch to the other, production one.
+
+How to prevent
+Keep an up-to-date inventory all API hosts.
+Limit access to anything that should not be public.
+Limit access to production data, and segregate access to production and non-production data.
+Implement additional external controls, such as API firewalls.
+Properly retire old versions of APIs or backport security fixes to them.
+Implement strict authentication, redirects, CORS, and so forth.
+
+A10 : Insufficient Logging & Monitoring
+Use case
+Logs are not protected for integrity.
+Logs are not integrated into Security Information and Event Management (SIEM) systems.
+Logs and alerts are poorly designed.
+Companies rely on manual rather than automated systems.
+How to prevent
+Log failed attempts, denied access, input validation failures, or any failures in security policy checks.
+Ensure that logs are formatted so that other tools can consume them as well.
+Protect logs like highly sensitive information.
+Include enough detail to identify attackers.
+Avoid having sensitive data in logs — if you need the information for debugging purposes, redact it partially.
+Integrate with SIEMs and other dashboards, monitoring, and alerting tools.
