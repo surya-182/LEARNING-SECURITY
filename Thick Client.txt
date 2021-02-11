@@ -1,0 +1,60 @@
+Process:
+
+Step 1: Send the Pre-requisite
+Step 2: Pre-requisite Received 
+		Check the Path where they have mention the setup file and it is accessible
+		Check whether the application is already installed
+		Take assistance from Developer for the setup of Thick client Appln
+		Also, take the Walkthrough
+Step 3: CFF Explorer to check the Framework Information
+Step 4: Wireshark/
+Step 4: Intercept Proxy through Echo Mirage
+Step 5: Follow the checklist and cheatsheet to conduct the Testing
+		
+https://www.cyberark.com/resources/threat-research-blog/thick-client-penetration-testing-methodology
+
+Checklist :
+
+Step 1 : CFF Explorer To Identify the Binary was Built using .NET
+Step 2 : Decomplier (dnspy)
+Step 3 : Network Sniffer
+Wireshark
+EchoMirage
+Fiddler
+Sensitive data transferred over an unencrypted tunnel (clear-text credentials/secrets/API Keys etc.)
+HTTP and HTTPS web endpoints (Web Services, REST API)
+File blobs/chunks sent over the wire
+Proprietary protocols used by the program
+Step 4 : 
+Client-Side attacks
+Hard-coded credentials
+API Keys
+API Endpoints
+Comments
+Hidden functio
+
+#1 Information Gathering
+	Wireshark
+	CFF Explorer
+
+#2 Traffic Analysis
+	Wireshark
+	Echo Mirage
+	mitm Relay + Burp Suite
+
+#3 Attacking Thick Client Application
+	Hardcoded Strings
+	Privilege Escalation via insecure dat storage
+	Dumping Connection String from Memory
+	Sqli Injection
+	Side Channel Data Leaks
+	Unreliable Logs
+	DLL Hijacking
+
+#4 
+Reversing and Patching
+Decompling with DotPeek
+Recreating the decryption logic
+ILSpy & Reflexil
+Patching with Reflexil
+Patching with ilasm & Idasm
